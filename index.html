@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Translator</title>
+    <title>Improved Gujarati Voice Translator</title>
     <style>
         #recording-status {
             color: red;
@@ -12,16 +12,16 @@
     </style>
 </head>
 <body>
-    <h1>Voice Translator</h1>
+    <h1>Improved Voice Translator</h1>
 
     <!-- Language Selection -->
     <label for="default-lang">Default Language:</label>
     <select id="default-lang">
-        <option value="gu" selected>Gujarati</option>
-        <option value="en">English</option>
-        <option value="hi">Hindi</option>
-        <option value="es">Spanish</option>
-        <option value="fr">French</option>
+        <option value="gu-IN" selected>Gujarati</option>
+        <option value="en-US">English (US)</option>
+        <option value="hi-IN">Hindi</option>
+        <option value="es-ES">Spanish</option>
+        <option value="fr-FR">French</option>
     </select>
 
     <label for="translate-lang">Translate To:</label>
@@ -76,7 +76,7 @@
 
         // Translate text
         async function translateText(originalText) {
-            const defaultLang = document.getElementById("default-lang").value;
+            const defaultLang = document.getElementById("default-lang").value.slice(0, 2); // Extract "gu" from "gu-IN"
             const translateLang = document.getElementById("translate-lang").value;
 
             // Encode the text for the URL
