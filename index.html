@@ -38,6 +38,68 @@
     <p><b>Original Voice to Text:</b> <span id="original-text"></span></p>
     <p><b>Translated Text:</b> <span id="translated-text"></span></p>
 
+
+    <script src="whatsapp.js"></script>
+    
+    <!-- <script>
+        // Voice recording function
+        async function startVoiceRecording() {
+            const recordingStatus = document.getElementById("recording-status");
+            recordingStatus.textContent = "Recording... Speak now!";
+            try {
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = document.getElementById("default-lang").value;
+
+                recognition.start();
+
+                recognition.onresult = async (event) => {
+                    recordingStatus.textContent = ""; // Clear recording status
+                    const originalText = event.results[0][0].transcript; // Get recognized text
+                    document.getElementById("original-text").textContent = originalText; // Display original text
+
+                    // Translate text
+                    await translateText(originalText);
+                };
+
+                recognition.onerror = (event) => {
+                    console.error("Speech recognition error:", event.error);
+                    recordingStatus.textContent = "Error recognizing voice. Please try again.";
+                };
+
+                recognition.onend = () => {
+                    if (recordingStatus.textContent === "Recording... Speak now!") {
+                        recordingStatus.textContent = "Recording ended. No input detected.";
+                    }
+                };
+            } catch (error) {
+                console.error("Voice recording error:", error);
+                recordingStatus.textContent = "Your browser doesn't support voice recording.";
+            }
+        }
+
+        // Translate text
+        async function translateText(originalText) {
+            const defaultLang = document.getElementById("default-lang").value.slice(0, 2); // Extract "gu" from "gu-IN"
+            const translateLang = document.getElementById("translate-lang").value;
+
+            // Encode the text for the URL
+            const encodedText = encodeURIComponent(originalText);
+
+            try {
+                const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${defaultLang}&tl=${translateLang}&dt=t&q=${encodedText}`);
+                const result = await response.json();
+
+                // Extract and display the translated text
+                const translatedText = result[0][0][0];
+                document.getElementById("translated-text").textContent = translatedText;
+            } catch (error) {
+                console.error("Translation error:", error);
+                document.getElementById("translated-text").textContent = "Translation failed.";
+            }
+        }
+    </script> -->
+
+
     <script>
         // Voice recording function
         async function startVoiceRecording() {
@@ -89,6 +151,9 @@
                 // Extract and display the translated text
                 const translatedText = result[0][0][0];
                 document.getElementById("translated-text").textContent = translatedText;
+
+                // After translation, paste text into WhatsApp
+                pasteTranslatedTextIntoWhatsApp(translatedText);
             } catch (error) {
                 console.error("Translation error:", error);
                 document.getElementById("translated-text").textContent = "Translation failed.";
