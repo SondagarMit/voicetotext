@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Translate Voice</title>
+</head>
+<body>
+    <h1>Google Translate Voice Example</h1>
+    <button onclick="startVoiceTranslation()">Start Voice Translation</button>
+
+    <p>Original Text: <span id="original-text"></span></p>
+    <p><a id="translation-link" href="#" target="_blank">View Translation</a></p>
+
+    <script>
+        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'gu-IN'; // Set Gujarati as the input language
+        recognition.continuous = false; // Stop after one result
+
+        function startVoiceTranslation() {
+            recognition.start();
+            document.getElementById("original-text").textContent = "Listening...";
+        }
+
+        recognition.onresult = function(event) {
+            let transcript = event.results[0][0].transcript;
+            document.getElementById("original-text").textContent = transcript;
+
+            // Encode the text for the URL
+            let encodedText = encodeURIComponent(transcript);
+
+            // Construct the Google Translate URL
+            let translateURL = `https://translate.google.com/?sl=gu&tl=en&text=${encodedText}&op=translate`;
+
+            // Update the link
+            let linkElement = document.getElementById("translation-link");
+            linkElement.href = translateURL;
+            linkElement.textContent = "View Translation";
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Speech recognition error:", event.error);
+            document.getElementById("original-text").textContent = "Error recognizing speech.";
+        };
+    </script>
+</body>
+</html>
