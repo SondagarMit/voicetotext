@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voice Translator</title>
+    <style>
+        #recording-status {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <h1>Voice Translator</h1>
@@ -28,21 +34,23 @@
 
     <!-- Voice Recording Button -->
     <button onclick="startVoiceRecording()">Record Voice</button>
+    <p id="recording-status"></p>
     <p><b>Original Voice to Text:</b> <span id="original-text"></span></p>
     <p><b>Translated Text:</b> <span id="translated-text"></span></p>
 
     <script>
-        // Start voice recording and handle transcription
+        // Voice recording function
         async function startVoiceRecording() {
-            // Show recording message
-            alert("Recording started. Speak now...");
+            const recordingStatus = document.getElementById("recording-status");
+            recordingStatus.textContent = "Recording... Speak now!";
             try {
-                // Use Web Speech API for voice recognition
                 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
                 recognition.lang = document.getElementById("default-lang").value;
+
                 recognition.start();
 
                 recognition.onresult = async (event) => {
+                    recordingStatus.textContent = ""; // Clear recording status
                     const originalText = event.results[0][0].transcript; // Get recognized text
                     document.getElementById("original-text").textContent = originalText; // Display original text
 
@@ -52,11 +60,17 @@
 
                 recognition.onerror = (event) => {
                     console.error("Speech recognition error:", event.error);
-                    alert("Failed to recognize voice. Please try again.");
+                    recordingStatus.textContent = "Error recognizing voice. Please try again.";
+                };
+
+                recognition.onend = () => {
+                    if (recordingStatus.textContent === "Recording... Speak now!") {
+                        recordingStatus.textContent = "Recording ended. No input detected.";
+                    }
                 };
             } catch (error) {
                 console.error("Voice recording error:", error);
-                alert("Your browser doesn't support voice recording.");
+                recordingStatus.textContent = "Your browser doesn't support voice recording.";
             }
         }
 
