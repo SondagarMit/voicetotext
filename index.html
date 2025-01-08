@@ -3,45 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Translate Voice</title>
+    <title>Voice Translator</title>
 </head>
 <body>
-    <h1>Google Translate Voice Example</h1>
-    <button onclick="startVoiceTranslation()">Start Voice Translation</button>
-
+    <h1>Voice Translator</h1>
+    <button onclick="callVoiceToText()">Start Voice Translation</button>
+    <br>
+    <input type="text" id="manual-text" placeholder="Enter text manually" oninput="updateText()" />
     <p>Original Text: <span id="original-text"></span></p>
-    <p><a id="translation-link" href="#" target="_blank">View Translation</a></p>
+    <p>Translated Text: <span id="translated-text"></span></p>
 
     <script>
-        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'gu-IN'; // Set Gujarati as the input language
-        recognition.continuous = false; // Stop after one result
-
-        function startVoiceTranslation() {
-            recognition.start();
-            document.getElementById("original-text").textContent = "Listening...";
-        }
-
-        recognition.onresult = function(event) {
-            let transcript = event.results[0][0].transcript;
-            document.getElementById("original-text").textContent = transcript;
+        async function callVoiceToText() {
+            const originalText = "તમારુ નામ શું છે?"; // Example Gujarati text
+            document.getElementById("original-text").textContent = originalText;
 
             // Encode the text for the URL
-            let encodedText = encodeURIComponent(transcript);
+            const encodedText = encodeURIComponent(originalText);
 
-            // Construct the Google Translate URL
-            let translateURL = `https://translate.google.com/?sl=gu&tl=en&text=${encodedText}&op=translate`;
+            // Fetch the translation directly from Google's service
+            try {
+                const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=gu&tl=en&dt=t&q=${encodedText}`);
+                const result = await response.json();
 
-            // Update the link
-            let linkElement = document.getElementById("translation-link");
-            linkElement.href = translateURL;
-            linkElement.textContent = "View Translation";
-        };
+                // Extract and display the translated text
+                const translatedText = result[0][0][0];
+                document.getElementById("translated-text").textContent = translatedText;
+            } catch (error) {
+                console.error("Error fetching translation:", error);
+                document.getElementById("translated-text").textContent = "Translation failed.";
+            }
+        }
 
-        recognition.onerror = function(event) {
-            console.error("Speech recognition error:", event.error);
-            document.getElementById("original-text").textContent = "Error recognizing speech.";
-        };
+        function updateText() {
+            const manualText = document.getElementById("manual-text").value;
+            document.getElementById("original-text").textContent = manualText;
+        }
     </script>
 </body>
 </html>
