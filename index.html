@@ -217,24 +217,24 @@
     }
 }
 
-// Function to paste translated text into WhatsApp input field
-function pasteTextIntoWhatsApp(text) {
-    // Use querySelector to target the WhatsApp input field based on its classes
-    const whatsappInputField = document.querySelector('.x1hx0egp[role="textbox"]');
-    if (whatsappInputField) {
-        // Clear any existing text (optional)
-        whatsappInputField.innerHTML = ''; 
+ // Function to paste translated text into WhatsApp input field
+ function pasteTextIntoWhatsApp(text) {
+            // Use querySelector to target the WhatsApp input field based on its classes
+            const whatsappInputField = document.querySelector('.x1hx0egp[role="textbox"]');
+            if (whatsappInputField) {
+                // Clear any existing text (optional)
+                whatsappInputField.innerHTML = ''; 
 
-        // Insert the translated text
-        whatsappInputField.innerHTML = text;
+                // Insert the translated text
+                whatsappInputField.innerHTML = text;
 
-        // Trigger the input event to notify WhatsApp (this simulates typing)
-        const inputEvent = new Event('input', { bubbles: true });
-        whatsappInputField.dispatchEvent(inputEvent);
-    } else {
-        console.error("WhatsApp input field not found.");
-    }
-}
+                // Trigger the input event to notify WhatsApp (this simulates typing)
+                const inputEvent = new Event('input', { bubbles: true });
+                whatsappInputField.dispatchEvent(inputEvent);
+            } else {
+                console.error("WhatsApp input field not found.");
+            }
+        }
     
         </script>
     </body>
