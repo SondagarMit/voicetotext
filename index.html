@@ -93,6 +93,25 @@
     <script src="whatsapp.js"></script>  <!-- Link to the script that pastes translated text into WhatsApp -->
 
     <script>
+
+
+         // Function to copy translated text to the clipboard
+    function copyToClipboard() {
+        const translatedText = document.getElementById("translated-text").textContent;
+        if (!translatedText || translatedText.trim() === "") {
+            alert("No translated text to copy!");
+            return;
+        }
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(translatedText).then(() => {
+            alert("Translated text copied to clipboard! Open WhatsApp Web and paste it.");
+        }).catch(err => {
+            console.error("Failed to copy text:", err);
+            alert("Failed to copy text. Please try again.");
+        });
+    }
+
         // Voice recording function
         async function startVoiceRecording() {
             const recordingStatus = document.getElementById("recording-status");
@@ -152,5 +171,7 @@
             }
         }
     </script>
+    <button onclick="copyToClipboard()">Copy Translated Text to Clipboard</button>
+
 </body>
 </html>
