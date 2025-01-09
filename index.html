@@ -96,23 +96,23 @@
             try {
                 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
                 recognition.lang = document.getElementById("default-lang").value;
-
+    
                 recognition.start();
-
+    
                 recognition.onresult = async (event) => {
                     recordingStatus.textContent = ""; // Clear recording status
                     const originalText = event.results[0][0].transcript; // Get recognized text
                     document.getElementById("original-text").textContent = originalText; // Display original text
-
+    
                     // Translate text
                     await translateText(originalText);
                 };
-
+    
                 recognition.onerror = (event) => {
                     console.error("Speech recognition error:", event.error);
                     recordingStatus.textContent = "Error recognizing voice. Please try again.";
                 };
-
+    
                 recognition.onend = () => {
                     if (recordingStatus.textContent === "Recording... Speak now!") {
                         recordingStatus.textContent = "Recording ended. No input detected.";
@@ -123,22 +123,22 @@
                 recordingStatus.textContent = "Your browser doesn't support voice recording.";
             }
         }
-
+    
         async function translateText(originalText) {
             const defaultLang = document.getElementById("default-lang").value.slice(0, 2); // Extract "gu" from "gu-IN"
             const translateLang = document.getElementById("translate-lang").value;
-
+    
             // Encode the text for the URL
             const encodedText = encodeURIComponent(originalText);
-
+    
             try {
                 const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${defaultLang}&tl=${translateLang}&dt=t&q=${encodedText}`);
                 const result = await response.json();
-
+    
                 // Extract and display the translated text
                 const translatedText = result[0][0][0];
                 document.getElementById("translated-text").textContent = translatedText;
-
+    
                 // After translation, send the translated text to WhatsApp
                 sendToWhatsApp(translatedText);
             } catch (error) {
@@ -146,17 +146,20 @@
                 document.getElementById("translated-text").textContent = "Translation failed.";
             }
         }
-
+    
         function sendToWhatsApp(translatedText) {
             const phoneNumber = "917878537979"; // WhatsApp number you want to send the message to
-            const message = `Hi%20EmbDesignTube.com%20,%20I%20want%20some%20information%20about%20your%20designs%20&%20services.%20${encodeURIComponent(translatedText)}`;
-
-            // Create the WhatsApp API link
+            
+            // Dynamically insert translated text into the message
+            const message = `${encodeURIComponent(translatedText)}`;
+    
+            // Create the WhatsApp API link with the translated message
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-
+    
             // Redirect to WhatsApp
             window.open(whatsappUrl, "_blank");
         }
     </script>
+    
 </body>
 </html>
