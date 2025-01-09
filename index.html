@@ -101,6 +101,9 @@
     <p><b>Original Voice to Text:</b> <span id="original-text"></span></p>
     <p><b>Translated Text:</b> <span id="translated-text"></span></p>
 
+
+    <button onclick="sendToWhatsApp()">Send to WhatsApp</button>
+
     <!-- <script>
 
         
@@ -169,7 +172,7 @@
 
     <!--Above code is Working but some limitation-->
     <script>
-        let translatedText = "";
+       // let translatedText = "";
         // Voice recording function
         async function startVoiceRecording() {
             const recordingStatus = document.getElementById("recording-status");
